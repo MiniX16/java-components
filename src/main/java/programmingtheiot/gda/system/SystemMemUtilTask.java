@@ -10,33 +10,31 @@ package programmingtheiot.gda.system;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-
+import java.util.logging.Logger;
 import programmingtheiot.common.ConfigConst;
 
 /**
  * Shell representation of class for student implementation.
- * 
  */
-public class SystemMemUtilTask extends BaseSystemUtilTask
-{
-	// constructors
-	
-	/**
-	 * Default.
-	 * 
-	 */
-	public SystemMemUtilTask()
-	{
-		super(ConfigConst.NOT_SET, ConfigConst.DEFAULT_TYPE_ID);
-	}
-	
-	
-	// public methods
-	
-	@Override
-	public float getTelemetryValue()
-	{
-		return 0.0f;
-	}
-	
+public class SystemMemUtilTask extends BaseSystemUtilTask {
+    // Logger instance (opcional, por si quieres loggear información)
+    private static final Logger _Logger = Logger.getLogger(SystemMemUtilTask.class.getName());
+
+    // Constructor
+    public SystemMemUtilTask() {
+        super(ConfigConst.NOT_SET, ConfigConst.DEFAULT_TYPE_ID);
+    }
+
+    @Override
+    public float getTelemetryValue() {
+        MemoryUsage memUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+        double memUsed = (double) memUsage.getUsed();
+        double memMax  = (double) memUsage.getMax();
+
+        _Logger.fine("Mem used: " + memUsed + "; Mem Max: " + memMax);
+
+        double memUtil = (memUsed / memMax) * 100.0d;
+
+        return (float) memUtil;
+    }
 }
